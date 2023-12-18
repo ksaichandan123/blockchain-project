@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Confirmed</title>
+
+   
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <%- include('navbar') %>
+    <div class="container">
+        <h1><%= title %></h1>
+        <p>Thank you for your payment. Your transaction has been confirmed. Our team will contact you as soon as possible.</p>
+    </div>
+    <div id="submissionMessage" class="alert alert-success" style="display: none;">
+        Your details have been stored successfully!
+      </div>
+    <form id="userDetailsForm">
+        <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" required>
+        </div>
+        <div class="form-group">
+            <label for="phoneNumber">Phone Number</label>
+            <input type="tel" class="form-control" id="phoneNumber" placeholder="Enter your phone number" required>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="createBasicContract()">Submit Details</button>
+    </form>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+        async function connectUserDetailsContract() {
+    try {
+        const ABI = [
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_fullName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_phoneNumber",
+				"type": "string"
+			}
+		],
+		"name": "updateUserDetails",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "fullName",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getUserDetails",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "phoneNumber",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+
+        const contractAddress = '0xe14904ca4b68f5f0b0a2dc7bb809fc6480f21f1c'; 
+
+        window.userDetailsContract = await new window.web3.eth.Contract(ABI, contractAddress);
+
+        document.getElementById("userDetailsContractDetails").innerHTML = "Connected to UserDetailsContract";
+        getUserDetails();
+    } catch (error) {
+        console.error("Error connecting to UserDetailsContract:", error);
+    }
+}
+
+async function getUserDetails() {
+        try {
+            const userDetails = await window.userDetailsContract.methods.getUserDetails().call();
+            document.getElementById("fullName").value = userDetails[0];
+            document.getElementById("phoneNumber").value = userDetails[1];
+        } catch (error) {
+            console.error("Error getting user details:", error);
+        }
+    }
+
+    async function createBasicContract() {
+        try {
+            const fullName = document.getElementById('fullName').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+
+            await connectUserDetailsContract();
+
+            await window.userDetailsContract.methods.updateUserDetails(fullName, phoneNumber).send({ from: account });
+
+            // Display the submission message
+            const submissionMessage = document.getElementById('submissionMessage');
+            submissionMessage.style.display = 'block';
+
+        } catch (error) {
+            console.error("Error creating basic contract:", error);
+        }
+    }
+    </script>
+
+</body>
+</html>

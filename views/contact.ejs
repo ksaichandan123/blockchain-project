@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+    <head>
+       <title>OSM and Leaflet</title>
+       <%- include('navbar') %>
+       <link rel = "stylesheet" href = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+    </head><body>
+        <div><p>You can Find us at this location</p></div>
+       <div id = "map" style = "width: 900px; height: 580px">
+        </div><script src = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+       <script>
+          // Creating map options
+          var mapOptions = {
+             center: [38.8977, 77.0365],
+             zoom: 10
+          }
+          
+          // Creating a map object
+          var map = new L.map('map', mapOptions);
+          
+          // Creating a Layer object
+          var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+          
+          // Adding layer to the map
+          map.addLayer(layer);
+       </script>
+    </body>
+    
+ </html>
+

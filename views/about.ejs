@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <!-- Add Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Add your custom styles if needed -->
+  <style>
+    body {
+      padding-top: 56px; /* Adjust based on your navigation bar height */
+    }
+
+    .content {
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Include the navigation bar -->
+  <%- include('navbar') %>
+
+  <div class="container mt-4">
+    <h1 class="display-4 text-center mb-4"><%= title %></h1>
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2">
+        <p class="lead text-justify">
+          At PR Agency, we specialize in providing comprehensive public relations services for celebrities. Our dedicated team works tirelessly to enhance the public image and reputation of our clients in the media and public eye.
+        </p>
+        <p class="text-justify">
+          What sets us apart is our strategic approach to publicity, leveraging our strong connections with media outlets and influencers to create positive narratives. We focus on crafting compelling stories, managing public perception, and ensuring our clients shine in the spotlight.
+        </p>
+        <p class="text-justify">
+          Whether it's managing press releases, organizing events, or navigating crisis communications, PR Agency is committed to delivering results. Our goal is to help celebrities build and maintain a positive public image, fostering success in their careers.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"></script>
+
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      color: #007bff;
+    }
+
+    h2 {
+      color: #004080;
+    }
+
+    p {
+      margin-bottom: 15px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+
+<body>
+  <%- include('navbar') %>
+  <div class="container">
+    <h1><%= title %></h1>
+    <p>You have selected:</p>
+    <h2><%= service.name %></h2>
+    <p>Cost: <%= service.cost %> Eth</p>
+
+    <input type="hidden" id="serviceId" value="<%= service.id %>">
+
+
+    <button onclick="redirectToPayment('<%= JSON.stringify(service) %>');">Pay via Metamask</button>
+
+   
+    <button onclick="paypalPayment('<%= JSON.stringify(service) %>');">Pay via PayPal</button>
+
+  <script>
+    const redirectToPayment = (serviceJSON) => {
+      const service = JSON.parse(serviceJSON.replace(/'/g, "&#39;"));
+      window.location.href = '/payment?service=' + encodeURIComponent(JSON.stringify(service));
+    };
+    const paypalPayment = async (serviceJSON) => {
+    try {
+      const service = JSON.parse(serviceJSON.replace(/'/g, "&#39;"));
+      const returnUrl = 'http://blockchain-env.eba-tmvsixpb.us-east-1.elasticbeanstalk.com/payment-confirmed'; 
+      //const returnUrl = 'http://localhost:3000/payment-confirmed'; 
+
+   
+      const payload = {
+        service,
+        returnUrl
+      };
+
+      const response = await fetch('/create-paypal-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),  // Send the entire payload to the server
+      });
+
+      const data = await response.json();
+
+      if (data.orderID) {
+        
+        window.location.href = `https://www.sandbox.paypal.com/checkoutnow?token=${data.orderID}`;
+      } else {
+        console.error("Failed to create PayPal order.");
+      }
+    } catch (error) {
+      console.error("Failed to initiate PayPal payment:", error);
+    }
+  };
+</script>
+
+  </script>
+</body>
+
+</html>
